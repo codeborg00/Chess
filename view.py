@@ -19,6 +19,8 @@ WHITE_QUEEN = pygame.image.load(os.path.join('Assets', 'white_queen.png'))
 BLACK_QUEEN = pygame.image.load(os.path.join('Assets', 'black_queen.png'))
 WHITE_KING = pygame.image.load(os.path.join('Assets', 'white_king.png'))
 BLACK_KING = pygame.image.load(os.path.join('Assets', 'black_king.png'))
+WHITE_ATTACKED = pygame.image.load(os.path.join('Assets', 'white_attacked.png'))
+BLACK_ATTACKED = pygame.image.load(os.path.join('Assets', 'black_attacked.png'))
 
 
 def draw_board():
@@ -29,10 +31,10 @@ def draw_board():
     for x in range(8):
         for y in range(8):
             if (x + y) % 2 != 0:
-                pygame.draw.rect(SCREEN, WHITE, (px_column, px_row, 100, 100))
+                pygame.draw.rect(SCREEN, BLACK, (px_column, px_row, 100, 100))
             
             else:
-                pygame.draw.rect(SCREEN, BLACK, (px_column, px_row, 100, 100))
+                pygame.draw.rect(SCREEN, WHITE, (px_column, px_row, 100, 100))
                    
             px_row += 100
 
@@ -107,7 +109,12 @@ def highlight_square(board, move_list):
             for value2 in move_list[index][1]:
                 if i == value2:
                     y, x = math.floor(i / 8.0), (i / 8 - math.floor(i / 8)) * 8
-                    pygame.draw.rect(SCREEN, RED, (x * 100, y * 100, 100, 100))
+                    if (x + y) % 2 != 0:
+                        SCREEN.blit((BLACK_ATTACKED), (x*100, y*100))
+            
+                    else:
+                        SCREEN.blit((WHITE_ATTACKED), (x*100, y*100))
+
 
 
     pygame.display.update()

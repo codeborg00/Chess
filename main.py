@@ -2,7 +2,7 @@ import board_file, view, pygame
 
 board= board_file.board
 
-board = board_file.import_FEN("8/8/4r3/2Q5/8/8/8/8 w - - 0 1", board)
+board = board_file.import_FEN("8/8/5k2/8/8/2K5/8/8 w - - 0 1", board)
 
 
 
