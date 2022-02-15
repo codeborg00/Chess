@@ -71,29 +71,49 @@ def squares_to_edge():
 
     
 def generate_moves2(board):
+    king_dest = []
     move_list = []
     num_squares_to_edge = squares_to_edge()
     counter = 0
     for value in board:
         if value[1] == 1:
-            move_list.append((counter, generate_pawn_moves(counter, num_squares_to_edge)))
+            move_list.append(((board[counter][0], counter), generate_pawn_moves(counter, num_squares_to_edge)))
         if value[1] == 2:
-            move_list.append((counter, generate_knight_moves(counter)))
+            move_list.append(((board[counter][0], counter), generate_knight_moves(counter)))
         if value[1] == 3:
-            move_list.append((counter, generate_sliding_piece_moves(3, counter, num_squares_to_edge)))
+            move_list.append(((board[counter][0], counter), generate_sliding_piece_moves(3, counter, num_squares_to_edge)))
 
         if value[1] == 4:
-            move_list.append((counter, generate_sliding_piece_moves(4, counter, num_squares_to_edge)))
+            move_list.append(((board[counter][0], counter), generate_sliding_piece_moves(4, counter, num_squares_to_edge)))
 
         if value[1] == 5:
-            move_list.append((counter, generate_sliding_piece_moves(5, counter, num_squares_to_edge)))
+            move_list.append(((board[counter][0], counter), generate_sliding_piece_moves(5, counter, num_squares_to_edge)))
         
         if value[1] == 6:
-            move_list.append((counter, generate_king_moves(counter, num_squares_to_edge)))
+            move_list.append(((board[counter][0], counter), generate_king_moves(counter, num_squares_to_edge)))
+            king_dest.append(generate_king_moves(counter, num_squares_to_edge))
+
 
         
 
         counter += 1
+
+
+    
+    white_false, black_false = check_move_validity(king_dest, move_list)
+    for square in move_list:
+        if board[square[0][1]][1] == 6 and board[square[0][1]][0] == 0:
+            for deletable in white_false:
+                print(deletable)
+                move_list[move_list.index(square)][1].remove(deletable)
+
+
+        if board[square[0][1]][1] == 6 and board[square[0][1]][0] == 1:
+            for deletable in black_false:
+                print(deletable)
+                print(move_list[move_list.index(square)][1])
+                move_list[move_list.index(square)][1].remove(deletable)
+
 
 
     return move_list
@@ -164,7 +184,6 @@ def generate_pawn_moves(position, num_square_to_edge):
         moves.append(position + offsets[3])
 
     if board[position + offsets[1]] != (-1, -1) and board[position + offsets[1]][0] != board[position][0] and num_square_to_edge[0] != 0:
-        print("Hello")
         moves.append(position + offsets[1])
 
     if board[position + offsets[2]] != (-1, -1) and board[position + offsets[2]][0] != board[position][0] and num_square_to_edge[1] != 0:
@@ -174,11 +193,40 @@ def generate_pawn_moves(position, num_square_to_edge):
 
 
 def generate_king_moves(position, num_squares_to_edge):
+    print(num_squares_to_edge)
     moves = []
     offsets = [-8, 1, 8, -1, -7, 9, 7, -9]
     for direction in range(len(offsets)):
-        if board[position + offsets[direction]][0] != board[position][0] and num_squares_to_edge[direction] != 0:
+        if board[position + offsets[direction]][0] != board[position][0] and num_squares_to_edge[position][direction] != 0:
+            print("!!!!!!!!!!!!!!!!!!!!!")
+            print(num_squares_to_edge[direction])
+            print(offsets[direction])
             moves.append(position + offsets[direction])
 
     return moves
     
+def check_move_validity(dest_squares, move_list):
+    print(dest_squares)
+    white_false = []
+    black_false = []
+    white_moves = []
+    black_moves = []
+    for square in move_list:
+        if square[0][0] == 0:
+            white_moves.append(i for i in square[1])
+        elif square[0][0] == 1:
+            black_moves.append([i for i in square[1]])
+
+    for square in black_moves[0]:
+        for square2 in dest_squares[0]:
+            if square2 == square:
+                white_false.append(square2)
+
+    for square in white_moves[0]:
+        for square2 in dest_squares[1]:
+            if square2 == square:
+                black_false.append(square2)
+
+    print(white_false, black_false)
+
+    return white_false, black_false

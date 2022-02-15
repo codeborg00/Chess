@@ -104,10 +104,11 @@ def render_pieces(board):
 
 
 def highlight_square(board, move_list):
+    print(move_list)
     for i in range(64):
         for index in range(len(move_list)):
             for value2 in move_list[index][1]:
-                if i == value2:
+                if i == value2: 
                     y, x = math.floor(i / 8.0), (i / 8 - math.floor(i / 8)) * 8
                     if (x + y) % 2 != 0:
                         SCREEN.blit((BLACK_ATTACKED), (x*100, y*100))
